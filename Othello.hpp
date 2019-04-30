@@ -37,6 +37,15 @@ enum Color
     White = 2,
 };
 
+struct Move
+{
+public:
+    Move(int x, int y) : x(x), y(y)
+    {};
+    const int x;
+    const int y;
+};
+
 class Othello
 {
 public:
@@ -46,13 +55,13 @@ public:
 
     virtual ~Othello();
 
-    void play(const int x, const int y, const Color color);
+    void play(const Move move, const Color color);
 
     int getOppositeColor(const Color color);
 
-    bool isLegal(const int x, const int y, const Color color);
+    bool isLegal(const Move move, const Color color);
 
-    std::vector<int> legal(const Color color);
+    std::vector<Move> legal(const Color color);
 
     bool isFinished();
 
@@ -80,7 +89,9 @@ private:
 
     int getPos(const int x, const int y, const int space = PAD);
 
-    void getXY(const int pos, int XY[2], const int space = PAD);
+    int getPos(const Move move, const int space = PAD);
+
+    Move getMove(const int pos, const int space = PAD);
 
     int eightNeighbourDirection(const int pos, const Direction direction);
 

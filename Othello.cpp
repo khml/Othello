@@ -68,10 +68,14 @@ int Othello::getPos(const int x, const int y, const int space)
     return (x + space) + realBoardSize * (y + space);
 }
 
-void Othello::getXY(const int pos, int XY[2], const int space)
+int Othello::getPos(const Move move, const int space)
 {
-    XY[0] = pos % realBoardSize - space;
-    XY[1] = pos / realBoardSize - space;
+    return getPos(move.x, move.y);
+}
+
+Move Othello::getMove(const int pos, const int space)
+{
+    return Move(pos % realBoardSize - space, pos / realBoardSize - space);
 }
 
 /*
@@ -149,21 +153,21 @@ bool Othello::isLegalPos(const int pos, const Color color)
     return neighbourFlag;
 }
 
-bool Othello::isLegal(const int x, const int y, const Color color)
+bool Othello::isLegal(const Move move, const Color color)
 {
-    if (x < 0 || boardSize < x || y < 0 || boardSize < y)
+    if (move.x < 0 || boardSize < move.x || move.y < 0 || boardSize < move.y)
         return false;
 
-    return isLegalPos(getPos(x, y), color);
+    return isLegalPos(getPos(move), color);
 }
 
-std::vector<int> Othello::legal(const Color color)
+std::vector<Move> Othello::legal(const Color color)
 {
-    std::vector<int> legalMoves;
+    std::vector<Move> legalMoves;
     for (auto pos = neighbours.begin(); pos != neighbours.end(); ++pos)
     {
         if (isLegalPos(*pos, color))
-            legalMoves.push_back(*pos);
+            legalMoves.push_back(getMove(*pos));
     }
     return legalMoves;
 }
@@ -229,21 +233,21 @@ void Othello::deleteDuplicateOfNeighbours()
     neighbours.erase(startOfUnused, neighbours.end());
 }
 
-void Othello::play(const int x, const int y, const Color color)
+void Othello::play(const Move move, const Color color)
 {
-    int pos = getPos(x, y);
-    if (isLegal(x, y, color))
+    int pos = getPos(move);
+    if (isLegal(move, color))
     {
         putStone(pos, color);
         turnStones(pos, color);
         deleteDuplicateOfNeighbours();
     } else
     {
-        std::cout << "Error Ilegal Position: x = " << x << ", y = " << y << std::endl;
-        Color origColor = board[getPos(x, y)];
-        putStone(getPos(x, y), color);
+        std::cout << "Error Ilegal Position: x = " << move.x << ", y = " << move.y << std::endl;
+        Color origColor = board[getPos(move)];
+        putStone(getPos(move), color);
         show();
-        putStone(getPos(x, y), origColor);
+        putStone(getPos(move), origColor);
 
     }
 

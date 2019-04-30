@@ -11,7 +11,8 @@ void playWithCommandLine(Othello &game)
     std::cout << "input as x,y,color = ";
     std::cin >> command;
     auto color = Color(std::stoi(command.substr(4, 1)));
-    game.play(std::stoi(command.substr(0, 1)), std::stoi(command.substr(2, 1)), color);
+    auto move = Move(std::stoi(command.substr(0, 1)), std::stoi(command.substr(2, 1)));
+    game.play(move, color);
 }
 
 void playOthello()
