@@ -48,6 +48,8 @@ public:
 
     void play(const int x, const int y, const Color color);
 
+    int getOppositeColor(const Color color);
+
     bool isLegal(const int x, const int y, const Color color);
 
     std::vector<int> legal(const Color color);
@@ -75,8 +77,6 @@ private:
     std::vector<int> neighbours;
 
     void initializeBoard();
-
-    int getOppositeColor(const Color color);
 
     int getPos(const int x, const int y, const int space = PAD);
 
