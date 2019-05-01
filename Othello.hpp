@@ -93,11 +93,15 @@ private:
 
     Move getMove(const int pos, const int space = PAD);
 
-    int eightNeighbourDirection(const int pos, const Direction direction);
+    int eightNeighbourDirection(int pos, const Direction direction, const int repeat = 1);
 
     bool isLegalPos(const int pos, const Color color);
 
-    int seekColorForOneDirection(const int centerPos, const int direction, const Color color);
+    bool isLegalRange(const Move move, bool isReal = false);
+
+    bool isLegalRange(const int pos, bool isReal = false);
+
+    int seekColorForOneDirection(const int centerPos, const Direction direction, const Color color);
 
     void putStone(const int pos, const Color color);
 

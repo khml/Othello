@@ -58,9 +58,13 @@ Color Othello::getOppositeColor(const Color color)
     return Color(3 - (int) color);
 }
 
-int inline Othello::eightNeighbourDirection(const int pos, const Direction direction)
+int inline Othello::eightNeighbourDirection(int pos, const Direction direction, const int repeat)
 {
-    return pos + eightNeighbour[(int) direction];
+    for (int i = 0; i < repeat; i++)
+    {
+        pos += eightNeighbour[(int) direction];
+    }
+    return pos;
 }
 
 int Othello::getPos(const int x, const int y, const int space)
@@ -79,27 +83,32 @@ Move Othello::getMove(const int pos, const int space)
 }
 
 /*
- * from pos, to one direction, seek color
- * return found pos
- * (color of pos is ignored)
+ * seek specified color in one direction.
+ * return pos of first found one when found.
+ * return negative value when not found.
+ * ignore centerPos.
  */
-int Othello::seekColorForOneDirection(const int centerPos, const int direction, const Color colorLookingFor)
+int Othello::seekColorForOneDirection(const int centerPos, const Direction direction, const Color colorLookingFor)
 {
-    int flag = -1;
-    int seekPos = centerPos;
-    for (int i = 0; i < realBoardSize; i++)
+    int seekPos = eightNeighbourDirection(centerPos, direction);
+    Color oppositeColor = getOppositeColor(colorLookingFor);
+    for (int i = 0; i < boardSize; i++)
     {
-        seekPos += eightNeighbour[direction];
-        if (board[seekPos] == colorLookingFor)
+        Color seekColor = board[seekPos];
+        if (seekColor == colorLookingFor)
         {
-            flag = seekPos;
-            break;
+            return seekPos;
         }
 
-        if (board[seekPos] == Wall || board[seekPos] == Empty)
+        if (seekColor == oppositeColor)
+        {
+            seekPos = eightNeighbourDirection(seekPos, direction);
+            continue;
+        } else
             break;
+
     }
-    return flag;
+    return -1;
 }
 
 void Othello::turnStones(const int pos, const Color color)
@@ -133,29 +142,49 @@ void Othello::turnStones(const int pos, const Color color)
 
 bool Othello::isLegalPos(const int pos, const Color color)
 {
-    bool neighbourFlag = false;
-
     if (board[pos] != Empty)
-        return neighbourFlag;
+        return false;
 
     int const opposite_color = getOppositeColor(color);
-    // explorer 8 neighbour
+    Direction direction;
+    int seekPos;
     for (int i = 0; i < DIRECTION_NUM; i++)
     {
-        auto direction = Direction(i);
-        if (board[eightNeighbourDirection(pos, direction)] == opposite_color &&
-            seekColorForOneDirection(pos, direction, color))
-        {
-            neighbourFlag = true;
-            break;
-        }
+        direction = Direction(i);
+
+        if (board[eightNeighbourDirection(pos, direction)] != opposite_color)
+            continue;
+
+        seekPos = eightNeighbourDirection(pos, direction); /*repeat=2, that's why 0 is self, 1 is just a next*/
+        if (!isLegalRange(getMove(seekPos)))
+            continue;
+
+        if (seekColorForOneDirection(seekPos, direction, color) > 0)
+            return true;
+
     }
-    return neighbourFlag;
+    return false;
+}
+
+bool Othello::isLegalRange(const Move move, bool isReal)
+{
+    int size;
+    if (isReal)
+        size = realBoardSize;
+    else
+        size = boardSize;
+
+    return !(move.x < 0 || size < move.x || move.y < 0 || size < move.y);
+}
+
+bool Othello::isLegalRange(const int pos, bool isReal)
+{
+    return isLegalRange(getMove(pos), isReal);
 }
 
 bool Othello::isLegal(const Move move, const Color color)
 {
-    if (move.x < 0 || boardSize < move.x || move.y < 0 || boardSize < move.y)
+    if (!isLegalRange(move))
         return false;
 
     return isLegalPos(getPos(move), color);
@@ -180,7 +209,7 @@ bool Othello::isBoardFull()
     {
         for (x = 0; x < boardSize; x++)
         {
-            if (board[getPos(y, x)] == Empty)
+            if (board[getPos(x, y)] == Empty)
             {
                 return false;
             }
@@ -221,6 +250,8 @@ void Othello::assignNeighbours(const int pos)
     for (int directionInt = 0; directionInt < DIRECTION_NUM; directionInt++)
     {
         int neighbour = eightNeighbourDirection(pos, Direction(directionInt));
+        if (!isLegalRange(neighbour))
+            continue;
         if (board[neighbour] == Empty)
             neighbours.push_back(neighbour);
     }
@@ -275,7 +306,11 @@ void Othello::show()
         auto stones = std::string("|");
         for (int x = 0; x < realBoardSize; x++)
         {
-            stones += toSymbol(board[getPos(x, y, 0)]) + "| ";
+            int pos = getPos(x, y, 0);
+            Move move = getMove(pos, 0);
+            if (!isLegalRange(move, true))
+                return;
+            stones += toSymbol(board[pos]) + "| ";
         }
         std::cout << stones << std::endl;
     }

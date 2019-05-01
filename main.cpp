@@ -26,8 +26,11 @@ void autoPlay()
     while (!game.isFinished())
     {
         auto candidates = game.legal(color);
-        auto move = candidates[0];
-        game.play(move, color);
+        if (!candidates.empty())
+        {
+            auto move = candidates[0];
+            game.play(move, color);
+        }
         color = game.getOppositeColor(color);
     }
 }
