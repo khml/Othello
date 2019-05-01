@@ -31,7 +31,7 @@ void autoPlay()
             auto move = candidates[0];
             game.play(move, color);
         }
-        color = game.getOppositeColor(color);
+        color = getOppositeColor(color);
     }
 }
 

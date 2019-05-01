@@ -7,6 +7,10 @@
 
 #include "Othello.hpp"
 
+Color getOppositeColor(const Color color)
+{
+    return Color(3 - (int) color);
+}
 
 Othello::Othello()
 {
@@ -53,11 +57,6 @@ void Othello::initializeBoard()
     show();
 }
 
-Color Othello::getOppositeColor(const Color color)
-{
-    return Color(3 - (int) color);
-}
-
 int inline Othello::eightNeighbourDirection(int pos, const Direction direction, const int repeat)
 {
     for (int i = 0; i < repeat; i++)
@@ -74,12 +73,12 @@ int Othello::getPos(const int x, const int y, const int space)
 
 int Othello::getPos(const Move move, const int space)
 {
-    return getPos(move.x, move.y);
+    return getPos(move.x, move.y, space);
 }
 
 Move Othello::getMove(const int pos, const int space)
 {
-    return Move(pos % realBoardSize - space, pos / realBoardSize - space);
+    return {pos % realBoardSize - space, pos / realBoardSize - space};
 }
 
 /*
@@ -193,10 +192,10 @@ bool Othello::isLegal(const Move move, const Color color)
 std::vector<Move> Othello::legal(const Color color)
 {
     std::vector<Move> legalMoves;
-    for (auto pos = neighbours.begin(); pos != neighbours.end(); ++pos)
+    for (auto pos : neighbours)
     {
-        if (isLegalPos(*pos, color))
-            legalMoves.push_back(getMove(*pos));
+        if (isLegalPos(pos, color))
+            legalMoves.push_back(getMove(pos));
     }
     return legalMoves;
 }
@@ -223,7 +222,7 @@ bool Othello::isFinished()
     if (isBoardFull())
         return true;
 
-    if (neighbours.size() == 0)
+    if (neighbours.empty())
         return true;
 
     if (legal(Black).empty() && legal(White).empty())
@@ -285,7 +284,7 @@ void Othello::play(const Move move, const Color color)
     show();
 }
 
-std::string Othello::toSymbol(const int color)
+std::string toSymbol(const int color)
 {
     if (color == Black)
         return "B";

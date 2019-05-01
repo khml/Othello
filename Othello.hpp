@@ -37,6 +37,9 @@ enum Color
     White = 2,
 };
 
+Color getOppositeColor(Color color);
+
+
 struct Move
 {
 public:
@@ -55,23 +58,21 @@ public:
 
     virtual ~Othello();
 
-    void play(const Move move, const Color color);
+    void play(Move move, Color color);
 
-    Color getOppositeColor(const Color color);
+    bool isLegal(Move move, Color color);
 
-    bool isLegal(const Move move, const Color color);
-
-    std::vector<Move> legal(const Color color);
+    std::vector<Move> legal(Color color);
 
     bool isFinished();
 
     void show();
 
 private:
-    int const boardSize = 6;
-    int const realBoardSize = boardSize + PAD * 2;
+    int boardSize = 6;
+    int realBoardSize = boardSize + PAD * 2;
     std::vector<Color> board;
-    int const eightNeighbour[DIRECTION_NUM] =
+    const int eightNeighbour[DIRECTION_NUM] =
             {
                     /*LeftDirection UP*/ -1 * realBoardSize - 1,
                     /*UP*/ -1 * realBoardSize,
@@ -87,36 +88,34 @@ private:
 
     void initializeBoard();
 
-    int getPos(const int x, const int y, const int space = PAD);
+    int getPos(int x, int y, int space = PAD);
 
-    int getPos(const Move move, const int space = PAD);
+    int getPos(Move move, int space = PAD);
 
-    Move getMove(const int pos, const int space = PAD);
+    Move getMove(int pos, int space = PAD);
 
-    int eightNeighbourDirection(int pos, const Direction direction, const int repeat = 1);
+    int eightNeighbourDirection(int pos, Direction direction, int repeat = 1);
 
-    bool isLegalPos(const int pos, const Color color);
+    bool isLegalPos(int pos, Color color);
 
-    bool isLegalRange(const Move move, bool isReal = false);
+    bool isLegalRange(Move move, bool isReal = false);
 
-    bool isLegalRange(const int pos, bool isReal = false);
+    bool isLegalRange(int pos, bool isReal = false);
 
-    int seekColorForOneDirection(const int centerPos, const Direction direction, const Color color);
+    int seekColorForOneDirection(int centerPos, Direction direction, Color color);
 
-    void putStone(const int pos, const Color color);
+    void putStone(int pos, Color color);
 
-    void assignNeighbours(const int pos);
+    void assignNeighbours(int pos);
 
     void deleteDuplicateOfNeighbours();
 
-    void turnStones(const int pos, const Color color);
+    void turnStones(int pos, Color color);
 
     bool isBoardFull();
-
-    std::string toSymbol(const int color);
-
-
 };
+
+std::string toSymbol(int color);
 
 
 #endif //OTHELLO_OTHELLO_HPP
