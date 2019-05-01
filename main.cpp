@@ -5,23 +5,36 @@
 #include <iostream>
 #include "Othello.hpp"
 
-void playWithCommandLine(Othello &game)
-{
-    std::string command;
-    std::cout << "input as x,y,color = ";
-    std::cin >> command;
-    auto color = Color(std::stoi(command.substr(4, 1)));
-    auto move = Move(std::stoi(command.substr(0, 1)), std::stoi(command.substr(2, 1)));
-    game.play(move, color);
-}
-
-void playOthello()
+void playWithCommandLine()
 {
     Othello game;
     while (!game.isFinished())
     {
-        playWithCommandLine(game);
+        std::string command;
+        std::cout << "input as x,y,color = ";
+        std::cin >> command;
+        auto color = Color(std::stoi(command.substr(4, 1)));
+        auto move = Move(std::stoi(command.substr(0, 1)), std::stoi(command.substr(2, 1)));
+        game.play(move, color);
     }
+}
+
+void autoPlay()
+{
+    Othello game;
+    Color color = Black;
+    while (!game.isFinished())
+    {
+        auto candidates = game.legal(color);
+        auto move = candidates[0];
+        game.play(move, color);
+        color = game.getOppositeColor(color);
+    }
+}
+
+void playOthello()
+{
+    autoPlay();
 }
 
 
