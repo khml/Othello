@@ -53,7 +53,7 @@ void Othello::initializeBoard()
     show();
 }
 
-int Othello::getOppositeColor(const Color color)
+Color Othello::getOppositeColor(const Color color)
 {
     return Color(3 - (int) color);
 }

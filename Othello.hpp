@@ -57,7 +57,7 @@ public:
 
     void play(const Move move, const Color color);
 
-    int getOppositeColor(const Color color);
+    Color getOppositeColor(const Color color);
 
     bool isLegal(const Move move, const Color color);
 
