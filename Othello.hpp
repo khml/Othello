@@ -69,7 +69,7 @@ public:
     void show();
 
 private:
-    int boardSize = 6;
+    int boardSize = 8;
     int realBoardSize = boardSize + PAD * 2;
     std::vector<Color> board;
     const int eightNeighbour[DIRECTION_NUM] =
