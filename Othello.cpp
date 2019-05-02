@@ -7,6 +7,11 @@
 
 #include "Othello.hpp"
 
+using std::cerr;
+using std::endl;
+using std::string;
+using std::vector;
+
 Color getOppositeColor(const Color color)
 {
     return Color(3 - (int) color);
@@ -26,7 +31,7 @@ Othello::~Othello()
 void Othello::initializeBoard()
 {
     // clear board and fill with EMPTY
-    std::vector<Color>().swap(board);
+    vector<Color>().swap(board);
     board.resize(realBoardSize * realBoardSize, Empty);
 
     // making Wall
@@ -53,7 +58,7 @@ void Othello::initializeBoard()
     putStone(eightNeighbourDirection(mid_pos, DownDirection), White);
     deleteDuplicateOfNeighbours();
 
-    std::cout << "initilize Board OK" << std::endl;
+    cerr << "initilize Board OK" << endl;
     show();
 }
 
@@ -189,9 +194,9 @@ bool Othello::isLegal(const Move move, const Color color)
     return isLegalPos(getPos(move), color);
 }
 
-std::vector<Move> Othello::legal(const Color color)
+vector<Move> Othello::legal(const Color color)
 {
-    std::vector<Move> legalMoves;
+    vector<Move> legalMoves;
     for (auto pos : neighbours)
     {
         if (isLegalPos(pos, color))
@@ -273,7 +278,7 @@ void Othello::play(const Move move, const Color color)
         deleteDuplicateOfNeighbours();
     } else
     {
-        std::cout << "Error Ilegal Position: x = " << move.x << ", y = " << move.y << std::endl;
+        cerr << "Error Ilegal Position: x = " << move.x << ", y = " << move.y << endl;
         Color origColor = board[getPos(move)];
         putStone(getPos(move), color);
         show();
@@ -284,7 +289,7 @@ void Othello::play(const Move move, const Color color)
     show();
 }
 
-std::string toSymbol(const int color)
+string toSymbol(const int color)
 {
     if (color == Black)
         return "B";
@@ -302,7 +307,7 @@ void Othello::show()
 {
     for (int y = 0; y < realBoardSize; y++)
     {
-        auto stones = std::string("|");
+        auto stones = string("|");
         for (int x = 0; x < realBoardSize; x++)
         {
             int pos = getPos(x, y, 0);
@@ -311,7 +316,7 @@ void Othello::show()
                 return;
             stones += toSymbol(board[pos]) + "| ";
         }
-        std::cout << stones << std::endl;
+        cerr << stones << endl;
     }
-    std::cout << std::endl;
+    cerr << endl;
 }
