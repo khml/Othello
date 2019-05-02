@@ -57,9 +57,6 @@ void Othello::initializeBoard()
     putStone(eightNeighbourDirection(mid_pos, RightDirection), White);
     putStone(eightNeighbourDirection(mid_pos, DownDirection), White);
     deleteDuplicateOfNeighbours();
-
-    cerr << "initilize Board OK" << endl;
-    show();
 }
 
 int inline Othello::eightNeighbourDirection(int pos, const Direction direction, const int repeat)
@@ -268,25 +265,16 @@ void Othello::deleteDuplicateOfNeighbours()
     neighbours.erase(startOfUnused, neighbours.end());
 }
 
-void Othello::play(const Move move, const Color color)
+bool Othello::play(const Move move, const Color color)
 {
+    if (!isLegal(move, color))
+        return false;
+
     int pos = getPos(move);
-    if (isLegal(move, color))
-    {
-        putStone(pos, color);
-        turnStones(pos, color);
-        deleteDuplicateOfNeighbours();
-    } else
-    {
-        cerr << "Error Ilegal Position: x = " << move.x << ", y = " << move.y << endl;
-        Color origColor = board[getPos(move)];
-        putStone(getPos(move), color);
-        show();
-        putStone(getPos(move), origColor);
-
-    }
-
-    show();
+    putStone(pos, color);
+    turnStones(pos, color);
+    deleteDuplicateOfNeighbours();
+    return true;
 }
 
 string toSymbol(const int color)

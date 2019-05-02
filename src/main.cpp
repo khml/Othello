@@ -16,12 +16,14 @@ void playWithCommandLine()
         auto color = Color(std::stoi(command.substr(4, 1)));
         auto move = Move(std::stoi(command.substr(0, 1)), std::stoi(command.substr(2, 1)));
         game.play(move, color);
+        game.show();
     }
 }
 
 void autoPlay()
 {
     Othello game;
+    game.show();
     Color color = Black;
     while (!game.isFinished())
     {
@@ -32,6 +34,7 @@ void autoPlay()
             game.play(move, color);
         }
         color = getOppositeColor(color);
+        game.show();
     }
 }
 

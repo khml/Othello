@@ -58,7 +58,7 @@ public:
 
     virtual ~Othello();
 
-    void play(Move move, Color color);
+    bool play(Move move, Color color);
 
     bool isLegal(Move move, Color color);
 
