@@ -68,7 +68,7 @@ public:
 
     void show();
 
-private:
+protected:
     int boardSize = 8;
     int realBoardSize = boardSize + PAD * 2;
     std::vector<Color> board;
