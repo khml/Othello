@@ -47,11 +47,11 @@ PYBIND11_MODULE(othello, m)
 
     py::class_<PyOthello>(m,"Othello")
         .def(py::init())
-        .def("play", &PyOthello::play)
-        .def("isLegal", &PyOthello::isLegal)
-        .def("board", &PyOthello::getBoard)
-        .def("legal", &PyOthello::legal)
-        .def("isFinished", &PyOthello::isFinished)
-        .def("show", &PyOthello::show);
+        .def("play", &PyOthello::play, "put stone", py::arg("move"), py::arg("color"))
+        .def("isLegal", &PyOthello::isLegal, "check move is legal or not", py::arg("move"), py::arg("color"))
+        .def("board", &PyOthello::getBoard, "get board data as np.nd-array")
+        .def("legal", &PyOthello::legal, "get legal moves for now situation.", py::arg("color"))
+        .def("isFinished", &PyOthello::isFinished, "check game finished or not")
+        .def("show", &PyOthello::show, "print board condition");
 }
 
